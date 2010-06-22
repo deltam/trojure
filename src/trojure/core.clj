@@ -62,9 +62,9 @@
        (create-entry))
   (GET "/edit/:id" [id]
         (println "edit id " id))
-  (POST "/save" [params]
+  (POST "/save" [text]
         (let [id (rand-id)]
-          (create-action id (params :text))
+          (create-action id text)
           (redirect (str "/entry/" id))))
   (ANY "*" []
        {:status 404, :body "<h1>Page not found</h1>"}))
