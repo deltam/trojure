@@ -1,12 +1,14 @@
 (ns trojure.core
-  (:gen-class)
-    (:use [compojure.core]
-          [hiccup.core]
-          [hiccup.form-helpers]
-          [ring.util.response :only (redirect)]
-          [ring.adapter.jetty :only (run-jetty)]
-          [clojure.contrib.duck-streams :only (reader writer)]
-          [clojure.contrib.seq-utils :only (rand-elt)]))
+  (:gen-class :extends javax.servlet.http.HttpServlet)
+  (:use [clojure.contrib.io :only (reader writer)]
+        [clojure.contrib.seq :only (rand-elt)]
+        [compojure.core]
+        [hiccup.core]
+        [hiccup.form-helpers]
+        [ring.util.servlet :only (defservice)]
+        [ring.util.response :only (redirect)])
+  (:require [compojure.route :as route]))
+
 
 (defn rand-id []
   (str (rand-int 999999999)))
@@ -77,7 +79,8 @@
 (defn update-action [id text]
   (println id text))
 
-(defroutes main-routes
+
+(defroutes trojure-public
   (GET "/" []
        (main-body (rand-elt @entries)))
   (GET "/entry/:id" [id]
@@ -93,22 +96,12 @@
        (update-entry id ((get-entry id) :text)))
   (PUT "/update" [id text]
        (update-action id text)
-       (redirect (str "/entry/" id)))
-  (ANY "*" []
-       {:status 404, :body "<h1>Page not found</h1>"}))
+       (redirect (str "/entry/" id))))
 
-; temporary solution
-; http://groups.google.com/group/compojure/browse_thread/thread/44a25e10c37f3b1b/d4a17cb99f84814f?pli=1
-(defn wrap-charset [handler charset] 
-  (fn [request] 
-    (if-let [response (handler request)] 
-      (if-let [content-type (get-in response [:headers "Content-Type"])] 
-        (if (.contains content-type "charset") 
-          response 
-          (assoc-in response 
-            [:headers "Content-Type"] 
-            (str content-type "; charset=" charset))) 
-        response)))) 
-(wrap! main-routes (:charset "utf8"))
+(defroutes trojure
+  trojure-public
+  (route/not-found "Page not Found")) ;404
 
-(run-jetty main-routes {:port 8080})
+
+(defservice trojure)
+
