@@ -1,6 +1,7 @@
-# trojure
+# Trojure
 
-FIXME: write description
+Tropy on Clojure.
+Work on GAE/J.
 
 ## Usage
 
