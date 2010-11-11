@@ -29,10 +29,12 @@
 (defn rand-entry []
   (rand-elt (get-entries)))
 
-
+(defn- get-entity [rid]
+  (some #(if (= rid (get-prop % :rid)) %)
+        (query-seq (q "Entry"))))
+  
 (defn get-entry [rid]
-  (some #(if (= rid (:rid %)) %)
-        (map to-map (query-seq (q "Entry")))))
+  (to-map (get-entity rid)))
 
 
 (defn create-action [text]
@@ -40,4 +42,6 @@
 
 
 (defn update-action [rid text]
-  (println rid text))
+  (let [et (get-entity rid)]
+    (set-prop et :text text)
+    (ds-put et)))

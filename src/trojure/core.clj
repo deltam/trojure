@@ -10,12 +10,9 @@
 
 (defroutes trojure-public
   (GET "/" []
-       (main-body (rand-entry)))
-;       (str (rand-entry)))
-;       (main-body {:id 1 :text "test"}))
+       (redirect (str "/entry/" (:rid (rand-entry)))))
   (GET "/entry/:rid" [rid]
        (main-body (get-entry rid)))
-;       (for [e (get-entries)] (str (e :text) "<br/>")))
   (GET "/new" []
        (create-entry))
   (POST "/save" [text]
