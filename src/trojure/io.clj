@@ -1,6 +1,5 @@
 (ns trojure.io
-  (:use [clojure.contrib.seq :only (rand-elt)]
-        [am.ik.clj-gae-ds.core]))
+  (:use [am.ik.clj-gae-ds.core]))
 
 
 (defn- rnd-id []
@@ -27,7 +26,7 @@
 
 
 (defn rand-entry []
-  (rand-elt (get-entries)))
+  (rand-nth (get-entries)))
 
 (defn- get-entity [rid]
   (some #(if (= rid (get-prop % :rid)) %)
