@@ -17,7 +17,7 @@
           [:br]
           [:a {:href (str "/entry/" rid)} "Permalink"]]]
         [:div {:align "right"}
-         "maked by " [:a {:href "http://twitter.com/deltam"} "@deltam"]]))
+         "src: " [:a {:href "http://github.com/deltam/trojure"} "github"]]))
 
 
 (defn main-body [entry]
